@@ -1,17 +1,19 @@
 const express = require('express')
-const app = express()
-const port = 4000
 const cors = require('cors')
-const option = {
-    origin: 'http://localhost:3000',
-}
-app.use(cors(option))
+//dotenv
+const dotenv = require('dotenv')
+const {readdirSync} = require('fs')
+const app = express()
+//port
+const port = process.env.PORT || 4000
+//config
+dotenv.config()
+//cors
+app.use(cors())
+//Dynamic routes
+readdirSync("./routes").map(r => app.use("/", require("./routes/" + r)));
 
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
+//server Listening
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
