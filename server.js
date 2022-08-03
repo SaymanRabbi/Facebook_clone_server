@@ -8,6 +8,8 @@ const dotenv = require('dotenv')
 const { readdirSync } = require('fs')
 //app
 const app = express()
+//json parser
+app.use(express.json())
 //port
 const port = process.env.PORT || 4000
 //config

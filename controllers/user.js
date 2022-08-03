@@ -1,3 +1,6 @@
 exports.home = (req, res) => {
-    res.send('Welcome From User')
+    res.status(200).json({
+        message: 'Welcome to the API',
+        error: false
+    })
 }
