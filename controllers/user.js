@@ -1,4 +1,5 @@
-const { validationEmail } = require('../helpers/validation')
+const { validationEmail, validationLength, userNameValidation } = require('../helpers/validation')
+const bcrypt = require('bcrypt')
 const User = require('../Models/User')
 exports.register = async(req, res) => {
    try {
@@ -24,14 +25,37 @@ const check = await User?.findOne({ email })
         return res.status(400).json({
         messages:"This email is already Exists Try Another One" 
         })
-       }     
-     return  
+       } 
+       //first name validation
+       if (!validationLength(first_name,3,30)) {
+        return res.status(400).json({
+            messages:"First Name Must Be Between 3 And 30 Characters" 
+            })
+       }
+       //last name validation
+       if (!validationLength(last_name,3,30)) {
+        return res.status(400).json({
+            messages:"Last Name Must Be Between 3 And 30 Characters" 
+            })
+       }
+       //password validation
+       if (!validationLength(password,6,30)) {
+        return res.status(400).json({
+            messages:"Password Must Be 6 Characters" 
+            })
+       }
+       const cryptedPassword = await bcrypt.hash(password, 12)
+       console.log(cryptedPassword);
+       let userName = first_name + last_name;
+       //user name validation
+       let newUserName = await userNameValidation(userName);
+       return;
     const user = await new User({
         first_name,
         last_name,
-        username,
+        username:newUserName,
         email,
-        password,
+        password:cryptedPassword,
         bYear,
         bMonth,
         bDay,
