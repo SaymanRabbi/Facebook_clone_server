@@ -1,6 +1,7 @@
 const { validationEmail, validationLength, userNameValidation } = require('../helpers/validation')
 const bcrypt = require('bcrypt')
 const User = require('../Models/User')
+const { genaretCode } = require('../helpers/token')
 exports.register = async(req, res) => {
    try {
     const {
@@ -45,11 +46,9 @@ const check = await User?.findOne({ email })
             })
        }
        const cryptedPassword = await bcrypt.hash(password, 12)
-       console.log(cryptedPassword);
        let userName = first_name + last_name;
        //user name validation
        let newUserName = await userNameValidation(userName);
-       return;
     const user = await new User({
         first_name,
         last_name,
@@ -61,6 +60,8 @@ const check = await User?.findOne({ email })
         bDay,
         gender
     }).save()
+       const emailvarificationToken = genaretCode({ id: user._id.toString() }, '30m')
+      
     res.json(user)
    } catch (error) {
     res.status(500).json({messages:error?.messages})
