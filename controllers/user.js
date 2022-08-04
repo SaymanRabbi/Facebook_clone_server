@@ -2,6 +2,7 @@ const { validationEmail, validationLength, userNameValidation } = require('../he
 const bcrypt = require('bcrypt')
 const User = require('../Models/User')
 const { genaretCode } = require('../helpers/token')
+const { sendVerifactionEmail } = require('../helpers/mailer')
 exports.register = async(req, res) => {
    try {
     const {
@@ -60,9 +61,21 @@ const check = await User?.findOne({ email })
         bDay,
         gender
     }).save()
+       //emailverification
        const emailvarificationToken = genaretCode({ id: user._id.toString() }, '30m')
-      
-    res.json(user)
+       const url = `${process.env.BASE_URL}/activate/${emailvarificationToken}`
+       sendVerifactionEmail(user?.email, user?.first_name, url)
+       const token = genaretCode({ id: user._id.toString() }, '7d')
+       res.send({
+           id: user._id,
+           usrname: user?.username,
+           picture: user?.picture,
+           first_name: user?.first_name,
+           last_name: user?.last_name,
+           token: token,
+           verified: user?.verified,
+           messages:"User Created Successfully Please Check Your Email To Activate Your Account"
+    })
    } catch (error) {
     res.status(500).json({messages:error?.messages})
    }
