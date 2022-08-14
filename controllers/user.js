@@ -1,4 +1,5 @@
 const { validationEmail, validationLength, userNameValidation } = require('../helpers/validation')
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../Models/User')
 const { genaretCode } = require('../helpers/token')
@@ -82,19 +83,19 @@ exports.register = async (req, res) => {
 };
 exports.activateAccount = async (req, res) => {
    try {
-    const { token } = req.body;
-    const user = jwt.verify(token, process.env.TOKEN_SECRET);
-    const check = await User.findById(user.id);
+       const { token } = req.body;
+       const user = jwt.verify(token, process.env.SECRET_TOKEN);
+       const check = await User.findById(user.id);
     if (check.verified == true) {
-      return res.status(400).json({ messages: "this email is already activated" });
+      return res.status(400).json({ messages: "This email is already activated" });
     } else {
-      await User.findByIdAndUpdate(user.id, { verified: true });
-      return res
-        .status(200)
-        .json({ messages: "Account has beeen activated successfully." });
+        await User.findByIdAndUpdate(user.id, { verified: true });
+        console.log(req);
+      return res.status(200).json({ messages: "Account has beeen activated successfully" },
+      );
     }
    } catch (error) {
-    res.status(500).json({ messages: error?.messages })
+    res.status(500).json({ messages: error?.messages },)
    }
 };
 
@@ -125,7 +126,6 @@ exports.login = async (req, res) => {
         res.status(500).json({ messages: error?.messages })
     }
 }
-exports.auth = async (req, res) => { 
-    console.log(req.user);
+exports.Userauth = async (req, res) => { 
     res.json("Welcome To Auth")
 }
