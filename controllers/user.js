@@ -81,15 +81,51 @@ exports.register = async (req, res) => {
     }
 };
 exports.activateAccount = async (req, res) => {
+   try {
     const { token } = req.body;
     const user = jwt.verify(token, process.env.TOKEN_SECRET);
     const check = await User.findById(user.id);
     if (check.verified == true) {
-      return res.status(400).json({ message: "this email is already activated" });
+      return res.status(400).json({ messages: "this email is already activated" });
     } else {
       await User.findByIdAndUpdate(user.id, { verified: true });
       return res
         .status(200)
-        .json({ message: "Account has beeen activated successfully." });
+        .json({ messages: "Account has beeen activated successfully." });
     }
-  };
+   } catch (error) {
+    res.status(500).json({ messages: error?.messages })
+   }
+};
+
+//login
+
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body
+        const user = await User.findOne({ email })
+        if (!user) {
+          return  res.status(400).json({ messages: "The Email Address Doesn't Exits"})
+        }
+        const check = await bcrypt.compare(password, user.password);
+        if (!check) { 
+            return res.status(400).json({ messages: "The Password Is Incorrect"})
+        }
+        const token = genaretCode({ id: user._id.toString() }, '7d')
+        res.send({
+            id: user._id,
+            usrname: user?.username,
+            picture: user?.picture,
+            first_name: user?.first_name,
+            last_name: user?.last_name,
+            token: token,
+            verified: user?.verified,
+        })
+    } catch (error) {
+        res.status(500).json({ messages: error?.messages })
+    }
+}
+exports.auth = async (req, res) => { 
+    console.log(req.user);
+    res.json("Welcome To Auth")
+}
