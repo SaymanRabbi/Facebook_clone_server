@@ -130,6 +130,22 @@ exports.login = async (req, res) => {
         res.status(500).json({ messages: error?.messages })
     }
 }
+// Send Verification Again
+exports.sendVerification = async (req, res) => { 
+try {
+    const id = req.user.id;
+    const user = await User.findById(id);
+    if (user.verified === true) {
+        return res.status(400).json({ messages: "This account is already verified" });
+    }
+    const emailvarificationToken = genaretCode({ id: user._id.toString() }, '30m')
+    const url = `${process.env.BASE_URL}/activate/${emailvarificationToken}`
+    sendVerifactionEmail(user?.email, user?.first_name, url)
+    return res.status(200).json({ messages: "Email Verification Link has been sent to your email" });
+} catch (error) {
+    res.status(500).json({ messages: error?.messages })
+}
+}
 exports.Userauth = async (req, res) => { 
     res.json("Welcome To Auth")
 }
