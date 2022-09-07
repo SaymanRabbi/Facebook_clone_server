@@ -6,8 +6,10 @@ const {
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../Models/User");
+const Code = require("../Models/Code");
+const { sendVerifactionEmail, sendResetCode } = require("../helpers/mailer");
+const genaretCodeReset = require("../helpers/genaretCodeReset");
 const { genaretCode } = require("../helpers/token");
-const { sendVerifactionEmail } = require("../helpers/mailer");
 exports.register = async (req, res) => {
   try {
     const {
@@ -123,26 +125,29 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res
-        .status(400)
-        .json({ messages: "The Email Address Doesn't Exits" });
+      return res.status(400).json({
+        message:
+          "the email address you entered is not connected to an account.",
+      });
     }
     const check = await bcrypt.compare(password, user.password);
     if (!check) {
-      return res.status(400).json({ messages: "The Password Is Incorrect" });
+      return res.status(400).json({
+        message: "Invalid credentials.Please try again.",
+      });
     }
     const token = genaretCode({ id: user._id.toString() }, "7d");
     res.send({
       id: user._id,
-      usrname: user?.username,
-      picture: user?.picture,
-      first_name: user?.first_name,
-      last_name: user?.last_name,
+      username: user.username,
+      picture: user.picture,
+      first_name: user.first_name,
+      last_name: user.last_name,
       token: token,
-      verified: user?.verified,
+      verified: user.verified,
     });
   } catch (error) {
-    res.status(500).json({ messages: error?.messages });
+    res.status(500).json({ messages: error.messages });
   }
 };
 // Send Verification Again
@@ -185,6 +190,26 @@ exports.findUser = async (req, res) => {
         picture: user.picture,
       });
     }
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+};
+
+// Reset Password Code
+exports.sendResetPasswordCode = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email }).select("-password");
+    await Code.findOneAndRemove({ user: user._id });
+    const code = genaretCodeReset(5);
+    const SaveCode = await new Code({
+      code,
+      user: user._id,
+    }).save();
+    sendResetCode(user.email, user.first_name, code);
+    return res.status(200).json({
+      messages: "Email Reset Code Has Been Send To Your Email",
+    });
   } catch (error) {
     res.status(500).json({ messages: error?.messages });
   }
