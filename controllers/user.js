@@ -108,7 +108,6 @@ exports.activateAccount = async (req, res) => {
         .json({ messages: "This email is already activated" });
     } else {
       await User.findByIdAndUpdate(user.id, { verified: true });
-      console.log(req);
       return res
         .status(200)
         .json({ messages: "Account has beeen activated successfully" });
@@ -162,13 +161,11 @@ exports.sendVerification = async (req, res) => {
       "30m"
     );
     const url = `${process.env.BASE_URL}/activate/${emailvarificationToken}`;
-    console.log(url);
     sendVerifactionEmail(user?.email, user?.first_name, url);
     return res.status(200).json({
       messages: "Email Verification Link has been sent to your email",
     });
   } catch (error) {
-    console.log("error");
     res.status(500).json({ messages: error?.messages });
   }
 };
@@ -208,6 +205,23 @@ exports.sendResetPasswordCode = async (req, res) => {
     sendResetCode(user.email, user.first_name, code);
     return res.status(200).json({
       messages: "Email Reset Code Has Been Send To Your Email",
+    });
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+};
+exports.validateResetCode = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    const user = await User.findOne({ email });
+    const dbcode = await Code.findOne({ user: user._id });
+    if (dbcode.code !== code) {
+      return res.status(400).json({
+        messages: "Code Does Not Valid",
+      });
+    }
+    return res.status(200).json({
+      messages: "ok",
     });
   } catch (error) {
     res.status(500).json({ messages: error?.messages });
