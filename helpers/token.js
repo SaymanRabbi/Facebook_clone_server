@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
-exports.genaretCode = (payload,expire) => {
-   return jwt.sign(payload, process.env.SECRET_TOKEN, {
-        expiresIn: expire
-    })
-}
+exports.genaretCode = (payload, expire) => {
+  return jwt.sign(payload, process.env.SECRET_TOKEN, {
+    expiresIn: expire,
+  });
+};

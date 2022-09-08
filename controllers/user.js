@@ -125,29 +125,26 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({
-        message:
-          "the email address you entered is not connected to an account.",
-      });
+      return res
+        .status(400)
+        .json({ messages: "The Email Address Doesn't Exits" });
     }
     const check = await bcrypt.compare(password, user.password);
     if (!check) {
-      return res.status(400).json({
-        message: "Invalid credentials.Please try again.",
-      });
+      return res.status(400).json({ messages: "The Password Is Incorrect" });
     }
     const token = genaretCode({ id: user._id.toString() }, "7d");
     res.send({
       id: user._id,
-      username: user.username,
-      picture: user.picture,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      usrname: user?.username,
+      picture: user?.picture,
+      first_name: user?.first_name,
+      last_name: user?.last_name,
       token: token,
-      verified: user.verified,
+      verified: user?.verified,
     });
   } catch (error) {
-    res.status(500).json({ messages: error.messages });
+    res.status(500).json({ messages: error?.messages });
   }
 };
 // Send Verification Again
@@ -165,11 +162,13 @@ exports.sendVerification = async (req, res) => {
       "30m"
     );
     const url = `${process.env.BASE_URL}/activate/${emailvarificationToken}`;
+    console.log(url);
     sendVerifactionEmail(user?.email, user?.first_name, url);
     return res.status(200).json({
       messages: "Email Verification Link has been sent to your email",
     });
   } catch (error) {
+    console.log("error");
     res.status(500).json({ messages: error?.messages });
   }
 };
