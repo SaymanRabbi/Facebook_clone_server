@@ -227,3 +227,20 @@ exports.validateResetCode = async (req, res) => {
     res.status(500).json({ messages: error?.messages });
   }
 };
+exports.changesPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const cryptedPassword = await bcrypt.hash(password, 12);
+    await User.findOneAndUpdate(
+      { email },
+      {
+        password: cryptedPassword,
+      }
+    );
+    return res.status(200).json({
+      messages: "ok",
+    });
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+};
