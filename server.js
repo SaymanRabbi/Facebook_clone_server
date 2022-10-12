@@ -1,4 +1,6 @@
 const express = require('express')
+// fileupload
+const fileupload = require('express-fileupload')
 //cors
 const cors = require('cors')
 //mongoose
@@ -16,8 +18,11 @@ const port = process.env.PORT || 4000
 dotenv.config()
 //cors
 app.use(cors())
+app.use(fileupload({
+    useTempFiles: true
+}))
 //Dynamic routes
-readdirSync("./routes").map(r => app.use("/", require("./routes/" + r)));
+readdirSync("./routes").map(r => app.use("/api/v1", require("./routes/" + r)));
 //DataBase  
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
