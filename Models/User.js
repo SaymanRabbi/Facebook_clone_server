@@ -128,7 +128,7 @@ const userSchema = mongoose.Schema(
       {
         post: {
           type: ObjectId,
-          ref: "Post",
+          ref: "post",
         },
         savedAt: {
           type: Date,
