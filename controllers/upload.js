@@ -20,6 +20,14 @@ exports.upload = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+exports.listimages = async (req, res) => {
+  const {path,sort,max} = req.body
+  cloudinary.v2.search.expression(`${path}`).sort_by('public_id',`${sort}`).max_results(max).execute().then(result => {
+    res.json(result.resources)
+  }).catch(err => {
+    res.json(err)
+  })
+}
 
 const uploadToCloudinary = async (file, path) => {
   return new Promise((resolve) => {
