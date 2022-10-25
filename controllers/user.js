@@ -244,3 +244,7 @@ exports.changesPassword = async (req, res) => {
     res.status(500).json({ messages: error?.messages });
   }
 };
+// -------get Profile Data----------
+exports.getProfile=async(req,res)=>{
+  const {username} = req.params
+}
