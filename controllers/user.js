@@ -251,7 +251,7 @@ exports.getProfile=async(req,res)=>{
     const user = await User.findOne({username}).select("-password")
     if(!user){
       return res.status(500).json({
-        messages:"User Does Not Exits"
+        messages: false
       })
     }
     return res.status(200).json({
