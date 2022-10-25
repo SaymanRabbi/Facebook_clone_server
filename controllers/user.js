@@ -246,5 +246,20 @@ exports.changesPassword = async (req, res) => {
 };
 // -------get Profile Data----------
 exports.getProfile=async(req,res)=>{
-  const {username} = req.params
+  try {
+    const {username} = req.params
+    const user = await User.findOne({username}).select("-password")
+    if(!user){
+      return res.status(500).json({
+        messages:"User Does Not Exits"
+      })
+    }
+    return res.status(200).json({
+      user,
+      messages:"ok"
+    })
+    
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
 }
