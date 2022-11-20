@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const { OAuth2 } = google.auth;
+const dotevn = require("dotenv").config();
 //link
 const authLink = "https://developers.google.com/oauthplayground";
 //keys
