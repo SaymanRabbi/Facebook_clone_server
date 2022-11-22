@@ -6,6 +6,7 @@ const {
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../Models/User");
+const Post = require('../Models/Post');
 const Code = require("../Models/Code");
 const { sendVerifactionEmail, sendResetCode } = require("../helpers/mailer");
 const genaretCodeReset = require("../helpers/genaretCodeReset");
@@ -254,8 +255,10 @@ exports.getProfile=async(req,res)=>{
         messages: false
       })
     }
+    const post = await Post.find({user: user._id}).populate("user", "-password")
     return res.status(200).json({
-      user,
+      ...user.toObject(),
+      post,
       messages:"ok"
     })
     
