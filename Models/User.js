@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema(
       type: String,
       trim: true,
       default:
-        "https://res.cloudinary.com/dnr5u3jpb/image/upload/v1660314778/66274549_2294238897491549_7839881165786841088_n_as0gqd.jpg",
+        "https://res.cloudinary.com/dnr5u3jpb/image/upload/v1669121697/360_F_517877468_8dx0lFR66R6LIgCOUYJWxun1b3Muv272_y8kgjp.jpg",
     },
     cover: {
       type: String,
