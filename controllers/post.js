@@ -1,4 +1,4 @@
-const PostModel = require('../models/post');
+const PostModel = require('../models/Post');
 exports.createpost = async (req, res) => {
     try {
         const post = await new PostModel(req.body).save();
