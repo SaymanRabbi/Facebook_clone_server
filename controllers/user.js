@@ -5,8 +5,8 @@ const {
 } = require("../helpers/validation");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const UserModel = require("../Models/User");
-const CodeModel = require("../Models/Code");
+const User = require("../Models/User");
+const Code = require("../Models/Code");
 const { sendVerifactionEmail, sendResetCode } = require("../helpers/mailer");
 const genaretCodeReset = require("../helpers/genaretCodeReset");
 const { genaretCode } = require("../helpers/token");
@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
         messages: "Unvalid Email Address",
       });
     }
-    const check = await UserModel?.findOne({ email });
+    const check = await User?.findOne({ email });
     if (check) {
       return res.status(400).json({
         messages: "This email is already Exists Try Another One",
@@ -57,7 +57,7 @@ exports.register = async (req, res) => {
     let userName = first_name + last_name;
     //user name validation
     let newUserName = await userNameValidation(userName);
-    const user = await new UserModel({
+    const user = await new User({
       first_name,
       last_name,
       username: newUserName,
@@ -96,7 +96,7 @@ exports.activateAccount = async (req, res) => {
     const validUser = req.user.id;
     const { token } = req.body;
     const user = jwt.verify(token, process.env.SECRET_TOKEN);
-    const check = await UserModel.findById(user.id);
+    const check = await User.findById(user.id);
     if (validUser !== user.id) {
       return res.status(400).json({
         messages: "You Don't Have The Authorization to Complete The Opeeation",
@@ -107,7 +107,7 @@ exports.activateAccount = async (req, res) => {
         .status(400)
         .json({ messages: "This email is already activated" });
     } else {
-      await UserModel.findByIdAndUpdate(user.id, { verified: true });
+      await User.findByIdAndUpdate(user.id, { verified: true });
       return res
         .status(200)
         .json({ messages: "Account has beeen activated successfully" });
@@ -122,7 +122,7 @@ exports.activateAccount = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await UserModel.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(400)
@@ -150,7 +150,7 @@ exports.login = async (req, res) => {
 exports.sendVerification = async (req, res) => {
   try {
     const id = req.user.id;
-    const user = await UserModel.findById(id);
+    const user = await User.findById(id);
     if (user.verified === true) {
       return res
         .status(400)
@@ -175,7 +175,7 @@ exports.Userauth = async (req, res) => {
 exports.findUser = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await UserModel.findOne({ email }).select("-password");
+    const user = await User.findOne({ email }).select("-password");
     if (!user) {
       return res.status(400).json({
         messages: "Acount does not Exists",
@@ -195,10 +195,10 @@ exports.findUser = async (req, res) => {
 exports.sendResetPasswordCode = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await UserModel.findOne({ email }).select("-password");
-    await CodeModel.findOneAndRemove({ user: user._id });
+    const user = await User.findOne({ email }).select("-password");
+    await Code.findOneAndRemove({ user: user._id });
     const code = genaretCodeReset(5);
-    const SaveCode = await new CodeModel({
+    const SaveCode = await new Code({
       code,
       user: user._id,
     }).save();
@@ -213,8 +213,8 @@ exports.sendResetPasswordCode = async (req, res) => {
 exports.validateResetCode = async (req, res) => {
   try {
     const { email, code } = req.body;
-    const user = await UserModel.findOne({ email });
-    const dbcode = await CodeModel.findOne({ user: user._id });
+    const user = await User.findOne({ email });
+    const dbcode = await Code.findOne({ user: user._id });
     if (dbcode.code !== code) {
       return res.status(400).json({
         messages: "Code Does Not Valid",
@@ -231,7 +231,7 @@ exports.changesPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
     const cryptedPassword = await bcrypt.hash(password, 12);
-    await UserModel.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { email },
       {
         password: cryptedPassword,
@@ -248,7 +248,7 @@ exports.changesPassword = async (req, res) => {
 exports.getProfile=async(req,res)=>{
   try {
     const {username} = req.params
-    const user = await UserModel.findOne({username}).select("-password")
+    const user = await User.findOne({username}).select("-password")
     if(!user || user === null){
       return res.send({
         messages: false

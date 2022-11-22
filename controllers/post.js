@@ -1,7 +1,7 @@
-const PostModel = require('../Models/Post');
+const Post = require('../Models/Post');
 exports.createpost = async (req, res) => {
     try {
-        const post = await new PostModel(req.body).save();
+        const post = await new Post(req.body).save();
         res.status(200).json({
             messages: "Create Post Successfully",
         });
@@ -13,7 +13,7 @@ exports.createpost = async (req, res) => {
 }
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await PostModel.find({}).populate('user',"first_name last_name picture username gender"
+        const posts = await Post.find({}).populate('user',"first_name last_name picture username gender"
 ).sort({createdAt:-1});
         res.status(200).json({
             messages: "Get All Posts Successfully",
