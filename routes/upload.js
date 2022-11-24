@@ -4,5 +4,5 @@ const {upload,listimages} = require("../controllers/upload");
 const { authUser } = require("../Middlewers/auth");
 const imagesauth = require("../Middlewers/imagesauth");
 router.post("/upload",authUser,imagesauth,upload);
-router.get("/listimages",listimages);
+router.post("/listimages",authUser,listimages);
 module.exports = router;
