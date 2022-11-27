@@ -255,13 +255,25 @@ exports.getProfile=async(req,res)=>{
         messages: false
       })
     }
-    const post = await Post.find({user: user._id}).populate("user", "-password")
+    const post = await Post.find({user: user._id}).populate("user", "-password").sort({createdAt: -1})
     return res.status(200).json({
       ...user.toObject(),
       post,
       messages:"ok"
     })
     
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
+exports.updateProfilePicture=async(req,res)=>{
+  try {
+    const {url} = req.body
+    await User.findByIdAndUpdate(req.user.id, {picture: url})
+    res.status(200).json({
+      messages: "success",
+      picture: url
+    })
   } catch (error) {
     res.status(500).json({ messages: error?.messages });
   }
