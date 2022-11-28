@@ -278,3 +278,15 @@ exports.updateProfilePicture=async(req,res)=>{
     res.status(500).json({ messages: error?.messages });
   }
 }
+exports.updateCover= async(req,res)=>{
+  try {
+    const {url} = req.body
+    await User.findByIdAndUpdate(req.user.id, {picture: url})
+    res.status(200).json({
+      messages: "success",
+      cover: url
+    })
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
