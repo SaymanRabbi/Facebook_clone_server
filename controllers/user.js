@@ -281,7 +281,7 @@ exports.updateProfilePicture=async(req,res)=>{
 exports.updateCover= async(req,res)=>{
   try {
     const {url} = req.body
-    await User.findByIdAndUpdate(req.user.id, {picture: url})
+    await User.findByIdAndUpdate(req.user.id, {cover: url})
     res.status(200).json({
       messages: "success",
       cover: url
