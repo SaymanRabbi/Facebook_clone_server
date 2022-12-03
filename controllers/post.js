@@ -13,7 +13,7 @@ exports.createpost = async (req, res) => {
 }
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find({}).populate('user',"first_name last_name picture username gender"
+        const posts = await Post.find({}).populate('user'
 ).sort({createdAt:-1});
         res.status(200).json({
             messages: "Get All Posts Successfully",
