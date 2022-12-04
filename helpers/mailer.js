@@ -7,11 +7,12 @@ const authLink = "https://developers.google.com/oauthplayground";
 //keys
 const { EMAIL, MAILING_ID, MAILING_SECRET, REFRESH_TOKEN } = process.env;
 
-const auth = new OAuth2(MAILING_ID, MAILING_SECRET, REFRESH_TOKEN, authLink);
+const auth = new OAuth2(MAILING_ID, MAILING_SECRET, authLink);
+auth.setCredentials({
+  refresh_token: REFRESH_TOKEN,
+});
 exports.sendVerifactionEmail = (email, name, url) => {
-  auth.setCredentials({
-    refresh_token: REFRESH_TOKEN,
-  });
+ try {
   const accessToken = auth.getAccessToken();
   const stmp = nodemailer.createTransport({
     service: "gmail",
@@ -34,11 +35,14 @@ exports.sendVerifactionEmail = (email, name, url) => {
     if (err) return err;
     return res;
   });
+ } catch (error) {
+  console.log(error);
+ }
 };
 exports.sendResetCode = (email, name, code) => {
-  auth.setCredentials({
-    refresh_token: REFRESH_TOKEN,
-  });
+  // auth.setCredentials({
+  //   refresh_token: REFRESH_TOKEN,
+  // });
   const accessToken = auth.getAccessToken();
   const stmp = nodemailer.createTransport({
     service: "gmail",
