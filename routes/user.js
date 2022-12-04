@@ -13,7 +13,10 @@ const {
   updateCover,
   updateDetails,
   addFriend,
-  cancelFriendRequest
+  cancelFriendRequest,
+  follow,
+  unfollow,
+  acceptFriendRequest
 } = require("../controllers/user");
 const { authUser } = require("../Middlewers/auth");
 const router = express.Router();
@@ -31,6 +34,9 @@ router.put("/updateCover", authUser, updateCover);
 router.put("/updateDetails", authUser, updateDetails);
 router.put('/addFriend/:id', authUser, addFriend);
 router.put('/cancelFriendRequest/:id', authUser, cancelFriendRequest);
+router.put('/follow/:id', authUser, follow);
+router.put('/unfollow/:id', authUser, unfollow);
+router.put('/acceptFriendRequest/:id', authUser, acceptFriendRequest);
 // router.post("/auth",authUser, Userauth);
 
 module.exports = router;
