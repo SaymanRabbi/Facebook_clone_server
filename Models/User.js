@@ -94,27 +94,35 @@ const userSchema = mongoose.Schema(
     details: {
       bio: {
         type: String,
+        trim: true,
       },
       otherName: {
         type: String,
+        trim: true,
       },
       job: {
         type: String,
+        trim: true,
       },
       workplace: {
         type: String,
+        trim: true,
       },
       highSchool: {
         type: String,
+        trim: true,
       },
       college: {
         type: String,
+        trim: true,
       },
       currentCity: {
         type: String,
+        trim: true,
       },
       hometown: {
         type: String,
+        trim: true,
       },
       relationship: {
         type: String,
