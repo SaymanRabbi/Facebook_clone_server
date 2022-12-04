@@ -307,3 +307,20 @@ exports.updateDetails= async(req,res)=>{
     res.status(500).json({ messages: error?.messages });
   }
 }
+exports.addFriend= async(req,res)=>{
+  try {
+    if(req.user.id !== req.params.id){
+      const sender = await User.findById(req.user.id)
+      const receiver = await User.findById(req.params.id)
+      if(!receiver?.requests?.includes(sender._id) && !sender?.friends?.includes(receiver._id)){
+    }
+  }
+    else{
+      return res.status(400).json({
+        messages: "You Can't Add Yourself"
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
