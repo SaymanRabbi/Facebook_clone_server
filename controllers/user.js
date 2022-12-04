@@ -423,22 +423,49 @@ exports.acceptFriendRequest= async(req,res)=>{
       const  receiver= await User.findById(req.user.id)
       const sender = await User.findById(req.params.id)
       if(receiver?.requests?.includes(sender._id)){
-        await receiver.updateOne({$push: {friends: sender._id,following: sender._id}})
-        await sender.updateOne({$push: {friends: receiver._id,followers: receiver._id}})
+        await receiver.update({$push: {friends: sender._id,following: sender._id}})
+        await sender.update({$push: {friends: receiver._id,followers: receiver._id}})
         await receiver.updateOne({$pull: {requests: sender._id}})
         res.status(200).json({
-          messages: "You are Unfollowed"
+          messages: "You are Friends"
         })
     }
     else{
       return res.status(400).json({
-        messages: "You are Already unfollowing"
+        messages: "You are Already accepted"
       })
     }
   }
     else{
       return res.status(400).json({
-        messages: "You Can't unfollow Yourself"
+        messages: "You Can't accept Yourself"
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
+exports.unfriend= async(req,res)=>{
+  try {
+    if(req.user.id !== req.params.id){
+      const  sender= await User.findById(req.user.id)
+      const receiver = await User.findById(req.params.id)
+      if(receiver?.friends?.includes(sender._id) && sender?.friends?.includes(receiver._id)){
+        await receiver.update({$pull: {friends: sender._id,following: sender._id,followers: sender._id}}) 
+        await sender.update({$pull: {friends: receiver._id,following: receiver._id,followers: receiver._id}}) 
+        res.status(200).json({
+          messages: "You are Unfriended"
+        })
+    }
+    else{
+      return res.status(400).json({
+        messages: "You are Already Unfriended"
+      })
+    }
+  }
+    else{
+      return res.status(400).json({
+        messages: "You Can't unfriend Yourself"
       })
     }
   } catch (error) {
