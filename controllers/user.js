@@ -313,6 +313,45 @@ exports.addFriend= async(req,res)=>{
       const sender = await User.findById(req.user.id)
       const receiver = await User.findById(req.params.id)
       if(!receiver?.requests?.includes(sender._id) && !sender?.friends?.includes(receiver._id)){
+        await receiver.updateOne({$push: {requests: sender._id}})
+        await receiver.updateOne({$push: {followers: sender._id}})
+        await sender.updateOne({$push: {following: receiver._id}})
+        res.status(200).json({
+          messages: "freind request has been sent"
+        })
+    }
+    else{
+      return res.status(400).json({
+        messages: "You are Already Friends"
+      })
+    }
+  }
+    else{
+      return res.status(400).json({
+        messages: "You Can't Add Yourself"
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
+exports.cancelFriendRequest= async(req,res)=>{
+  try {
+    if(req.user.id !== req.params.id){
+      const sender = await User.findById(req.user.id)
+      const receiver = await User.findById(req.params.id)
+      if(!receiver?.requests?.includes(sender._id) && !sender?.friends?.includes(receiver._id)){
+        await receiver.updateOne({$pull: {requests: sender._id}})
+        await receiver.updateOne({$pull: {followers: sender._id}})
+        await sender.updateOne({$pull: {following: receiver._id}})
+        res.status(200).json({
+          messages: "freind request has been sent"
+        })
+    }
+    else{
+      return res.status(400).json({
+        messages: "You are Already Friends"
+      })
     }
   }
     else{
