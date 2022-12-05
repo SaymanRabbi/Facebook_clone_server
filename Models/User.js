@@ -70,32 +70,32 @@ const userSchema = mongoose.Schema(
     friends: [
       {
         type: ObjectId,
-        ref: "User",
+        ref: "user",
       },
     ],
     following: [
       {
         type: ObjectId,
-        ref: "User",
+        ref: "user",
       },
     ],
     followers: [
       {
         type: ObjectId,
-        ref: "User",
+        ref: "user",
       },
     ],
     requests: [
       {
         type: ObjectId,
-        ref: "User",
+        ref: "user",
       },
     ],
     search: [
       {
         user: {
           type: ObjectId,
-          ref: "User",
+          ref: "user",
         },
       },
     ],
