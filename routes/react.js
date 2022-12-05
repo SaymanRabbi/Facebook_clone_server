@@ -1,8 +1,10 @@
 const express = require("express");
 const {
-    reactPost
+    reactPost,
+    getReact
 } = require("../controllers/react");
 const { authUser } = require("../Middlewers/auth");
 const router = express.Router();
 router.put("/reactPost",authUser,reactPost);
+router.get("/getReact/:id",authUser,getReact);
 module.exports = router;

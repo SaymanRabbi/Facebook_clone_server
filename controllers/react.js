@@ -41,3 +41,17 @@ exports.reactPost = async (req, res) => {
         
     }
 }
+exports.getReact=async (req, res) => {
+try {
+    const {id} = req.params;
+        const reacts = await React.find({postRef:id});
+        const cheack = await React.findOne({
+            postRef: id,
+            userRef: req?.user?.id,
+        })
+        // conslole.log(cheack?.react?.react);
+        res.status(200).json({reacts,cheack:cheack});
+} catch (error) {
+    res.status(500).json({  messages:error.message});
+}
+}
