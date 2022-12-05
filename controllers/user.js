@@ -249,11 +249,21 @@ exports.changesPassword = async (req, res) => {
 exports.getProfile=async(req,res)=>{
   try {
     const {username} = req.params
+    const profile = await User.findById(req.user.id).select("-password")
     const user = await User.findOne({username}).select("-password")
+    const friendShip = {
+      friends:false,
+      request:false,
+      following:false,
+      requestRecived:false
+    }
     if(!user || user === null){
       return res.send({
         messages: false
       })
+    }
+    if(profile.friends.includes(user._id)&&user.friends.includes(profile._id)){
+      friendShip.friends = true
     }
     const post = await Post.find({user: user._id}).populate("user", "-password").sort({createdAt: -1})
     return res.status(200).json({
