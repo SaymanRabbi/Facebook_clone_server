@@ -472,3 +472,10 @@ exports.unfriend= async(req,res)=>{
     res.status(500).json({ messages: error?.messages });
   }
 }
+exports.deleteRequest= async(req,res)=>{
+  try {
+    
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
