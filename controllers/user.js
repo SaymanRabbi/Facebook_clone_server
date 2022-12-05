@@ -253,7 +253,7 @@ exports.getProfile=async(req,res)=>{
     const user = await User.findOne({username}).select("-password")
     const friendShip = {
       friends:false,
-      request:false,
+      requestsent:false,
       following:false,
       requestRecived:false
     }
@@ -269,7 +269,10 @@ exports.getProfile=async(req,res)=>{
       friendShip.following = true
     }
     if(profile.request.includes(user._id)){
-      friendShip.request = true
+      friendShip.requestRecived = true
+    }
+    if(user.request.includes(profile._id)){
+      friendShip.requestsent = true
     }
     const post = await Post.find({user: user._id}).populate("user", "-password").sort({createdAt: -1})
     return res.status(200).json({
