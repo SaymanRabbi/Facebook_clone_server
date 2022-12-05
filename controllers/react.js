@@ -25,6 +25,12 @@ exports.reactPost = async (req, res) => {
                     message: "Unreacted",
                 });
             }
+            else{
+                await React.findByIdAndUpdate(cheack._id,{react});
+                res.status(200).json({
+                    message: "Reacted",
+                });
+            }
         }
 
     } catch (error) {
