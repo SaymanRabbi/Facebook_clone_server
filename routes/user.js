@@ -40,7 +40,7 @@ router.put('/follow/:id', authUser, follow);
 router.put('/unfollow/:id', authUser, unfollow);
 router.put('/acceptFriendRequest/:id', authUser, acceptFriendRequest);
 router.put('/unfriend/:id', authUser, unfriend);
-router.put('deleteRequest/:id', authUser, deleteRequest);
+router.put('/deleteRequest/:id', authUser, deleteRequest);
 
 // router.post("/auth",authUser, Userauth);
 

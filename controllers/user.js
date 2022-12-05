@@ -268,17 +268,18 @@ exports.getProfile=async(req,res)=>{
     if(profile.following.includes(user._id)){
       friendShip.following = true
     }
-    if(profile.request.includes(user._id)){
+    if(profile.requests.includes(user._id)){
       friendShip.requestRecived = true
     }
-    if(user.request.includes(profile._id)){
+    if(user.requests.includes(profile._id)){
       friendShip.requestsent = true
     }
     const post = await Post.find({user: user._id}).populate("user", "-password").sort({createdAt: -1})
     return res.status(200).json({
       ...user.toObject(),
       post,
-      messages:"ok"
+      messages:"ok",
+      friendShip
     })
     
   } catch (error) {
