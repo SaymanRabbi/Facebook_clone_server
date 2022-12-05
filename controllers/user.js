@@ -473,9 +473,30 @@ exports.unfriend= async(req,res)=>{
   }
 }
 exports.deleteRequest= async(req,res)=>{
-  try {
-    
-  } catch (error) {
+    try {
+      if(req.user.id !== req.params.id){
+        const  receiver= await User.findById(req.user.id)
+        const sender = await User.findById(req.params.id)
+        if(receiver?.requests?.includes(sender._id) ){
+          await receiver.update({$pull: {requests: sender._id,followers: sender._id}}) 
+          await sender.update({$pull: {following: receiver._id}}) 
+          res.status(200).json({
+            messages: "Dellete Request"
+          })
+      }
+      else{
+        return res.status(400).json({
+          messages: "You are Already Dellete Request"
+        })
+      }
+    }
+      else{
+        return res.status(400).json({
+          messages: "You Can't delete Yourself"
+        })
+      }
+    }
+   catch (error) {
     res.status(500).json({ messages: error?.messages });
   }
 }
