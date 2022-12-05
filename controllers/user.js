@@ -275,6 +275,7 @@ exports.getProfile=async(req,res)=>{
       friendShip.requestsent = true
     }
     const post = await Post.find({user: user._id}).populate("user", "-password").sort({createdAt: -1})
+    await user.populate("friends","first_name last_name username picture");
     return res.status(200).json({
       ...user.toObject(),
       post,
