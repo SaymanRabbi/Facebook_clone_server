@@ -263,16 +263,16 @@ exports.getProfile=async(req,res)=>{
       })
     }
     if(profile.friends.includes(user._id)&&user.friends.includes(profile._id)){
-      friendShip.friends = true
+        friendShip.friends = true
     }
     if(profile.following.includes(user._id)){
       friendShip.following = true
     }
     if(profile.requests.includes(user._id)){
-      friendShip.requestRecived = true
+       friendShip.requestRecived = true
     }
     if(user.requests.includes(profile._id)){
-      friendShip.requestsent = true
+       friendShip.requestsent = true
     }
     const post = await Post.find({user: user._id}).populate("user", "-password").sort({createdAt: -1})
     await user.populate("friends","first_name last_name username picture");
@@ -471,8 +471,9 @@ exports.unfriend= async(req,res)=>{
     if(req.user.id !== req.params.id){
       const  sender= await User.findById(req.user.id)
       const receiver = await User.findById(req.params.id)
+      // console.log(sender?.friends?.includes(receiver._id))
       if(receiver?.friends?.includes(sender._id) && sender?.friends?.includes(receiver._id)){
-        await receiver.update({$pull: {friends: sender._id,following: sender._id,followers: sender._id}}) 
+        await receiver.update({$pull: {friends: sender._id,following: sender._id,followers: sender._id}})
         await sender.update({$pull: {friends: receiver._id,following: receiver._id,followers: receiver._id}}) 
         res.status(200).json({
           messages: "You are Unfriended"
