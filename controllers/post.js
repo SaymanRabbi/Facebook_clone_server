@@ -25,3 +25,18 @@ exports.getAllPosts = async (req, res) => {
         })
     }
 }
+exports.comment = async (req, res) => {
+    try {
+        const {comment,postId,image} = req.body;
+        let newComment = await Post.findByIdAndUpdate(postId,{
+            $push:{comments:{comment,image,commentBy:req.user.id}}
+
+        },{
+            new:true
+        })
+    } catch (error) {
+        return res.status(500).json({
+            messages:error.message
+        })
+    }
+}
