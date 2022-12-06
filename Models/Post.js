@@ -31,7 +31,7 @@ required:true
     },
     commentBy:{
         type:ObjectId,
-        ref:'User',
+        ref:'user',
     },
     commentAt:{
         type:Date,

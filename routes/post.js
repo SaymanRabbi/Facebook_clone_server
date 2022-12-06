@@ -8,5 +8,5 @@ const { authUser } = require("../Middlewers/auth");
 const router = express.Router();
 router.post("/createpost", authUser,createpost);
 router.get("/posts", authUser,getAllPosts);
-router.put('comment/',authUser,comment)
+router.put('/comment',authUser,comment)
 module.exports = router;
