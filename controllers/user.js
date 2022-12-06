@@ -274,7 +274,7 @@ exports.getProfile=async(req,res)=>{
     if(user.requests.includes(profile._id)){
        friendShip.requestsent = true
     }
-    const post = await Post.find({user: user._id}).populate("user", "-password").sort({createdAt: -1})
+    const post = await Post.find({user: user._id}).populate("user", "-password").populate('comments.commentBy','first_name last_name picture username').sort({createdAt: -1})
     await user.populate("friends","first_name last_name username picture");
     return res.status(200).json({
       ...user.toObject(),
