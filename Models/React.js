@@ -10,7 +10,7 @@ const reactSchema = new mongoose.Schema({
   },
   postRef:{
     type: ObjectId,
-    ref: "Post",
+    ref: "post",
   },
     userRef:{
     type: ObjectId,

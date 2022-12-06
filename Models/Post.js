@@ -30,16 +30,16 @@ required:true
         type:String,
     },
     commentBy:{
-        type:ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:'user',
     },
     commentAt:{
         type:Date,
-        default: new Date()
+        required:true
     }
   }]
 },{
     timestamps:true
 })
 
-module.exports = mongoose.model('Post',postSchema)
+module.exports = mongoose.model('post',postSchema)

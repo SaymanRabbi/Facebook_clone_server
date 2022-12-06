@@ -9,7 +9,7 @@ const codeSchema = new mongoose.Schema({
   },
   user: {
     type: ObjectId,
-    ref: "User",
+    ref: "user",
     required: true,
   },
 });

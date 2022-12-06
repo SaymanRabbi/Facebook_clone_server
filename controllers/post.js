@@ -29,7 +29,7 @@ exports.comment = async (req, res) => {
     try {
         const {comment,postId,image} = req.body;
         let newComment = await Post.findByIdAndUpdate(postId,{
-            $push:{comments:{comment,image,commentBy:req.user.id}}
+            $push:{comments:{comment,image,commentBy:req.user.id,commentAt:new Date()}}
 
         },{
             new:true
