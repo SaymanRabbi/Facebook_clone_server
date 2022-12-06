@@ -16,7 +16,6 @@ exports.reactPost = async (req, res) => {
                 userRef: req?.user?.id,
             })
             await reactNew.save();
-            console.log(reactNew);
             res.status(200).json({
                 message: "Reacted",
             });
@@ -79,14 +78,11 @@ const reacts = [
         count: newReacts.angry ? newReacts.angry.length : 0,
       },
 ]
-reacts.sort((a, b) => {
-    return b.count - a.count;
-  });
         const cheack = await React.findOne({
             postRef: id,
             userRef: req?.user?.id,
         })
-        console.log(cheack);
+        // console.log(cheack);
         res.status(200).json({reacts,cheack:cheack,total:Reactarray.length});
 } catch (error) {
     res.status(500).json({  messages:error.message});
