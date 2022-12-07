@@ -11,6 +11,7 @@ const Code = require("../Models/Code");
 const { sendVerifactionEmail, sendResetCode } = require("../helpers/mailer");
 const genaretCodeReset = require("../helpers/genaretCodeReset");
 const { genaretCode } = require("../helpers/token");
+const mongoose = require("mongoose");
 exports.register = async (req, res) => {
   try {
     const {
@@ -533,7 +534,9 @@ exports.search= async(req,res)=>{
 }
 exports.friendPageinfo= async(req,res)=>{
   try {
-    
+    const user = await User.findById(req.user.id).select('friends requests').populate("friends","first_name last_name username picture").populate("requests","first_name last_name username picture")
+    const sentRequests= await User.find({requests:mongoose.Types.ObjectId(req.user.id)}).select('first_name last_name username picture')
+
   } catch (error) {
     res.status(500).json({ messages: error?.messages });
   }
