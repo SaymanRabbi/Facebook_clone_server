@@ -525,8 +525,15 @@ exports.deleteRequest= async(req,res)=>{
 exports.search= async(req,res)=>{
   try {
     const {searchTerm} = req.params
-    const results = await User.find({$text: {$search: searchTerm}}).select('first_name last_name username picture')
+    const results = await User.find({$text: {$search: searchTerm}}).select('first_name last_name username picture').limit(10)
     res.status(200).json(results)
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
+exports.friendPageinfo= async(req,res)=>{
+  try {
+    
   } catch (error) {
     res.status(500).json({ messages: error?.messages });
   }

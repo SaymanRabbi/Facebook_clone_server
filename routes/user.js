@@ -19,7 +19,8 @@ const {
   acceptFriendRequest,
   unfriend,
   deleteRequest,
-  search
+  search,
+  friendPageinfo
 } = require("../controllers/user");
 const { authUser } = require("../Middlewers/auth");
 const router = express.Router();
@@ -43,6 +44,7 @@ router.put('/acceptFriendRequest/:id', authUser, acceptFriendRequest);
 router.put('/unfriend/:id', authUser, unfriend);
 router.put('/deleteRequest/:id', authUser, deleteRequest);
 router.post('/search/:searchTerm', authUser, search)
+router.get('/friendPageinfo', authUser, friendPageinfo)
 
 // router.post("/auth",authUser, Userauth);
 
