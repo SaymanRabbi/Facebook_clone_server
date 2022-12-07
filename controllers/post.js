@@ -1,5 +1,6 @@
 const Post = require('../Models/Post');
 const User = require('../Models/User');
+// const { use } = require('../routes/post');
 exports.createpost = async (req, res) => {
     try {
         const post = await new Post(req.body).save();
@@ -59,6 +60,20 @@ exports.savepost = async (req, res) => {
     try {
         const {id} = req.params;
         const user = await User.findById(req.user.id);
+        const isSaved = user.savedPosts.find((post) => post.post.toString() == id);
+        if(isSaved){
+            await User.findByIdAndUpdate(req.user.id,{
+                $pull:{savedPosts:{post:id},
+            }
+            })
+        }
+        else{
+            await User.findByIdAndUpdate(req.user.id,{
+                $push:{savedPosts:{post:id},
+                dasavedAt:new Date()
+            }
+            })
+        }
     } catch (error) {
         return res.status(500).json({
             messages:error.message
