@@ -14,9 +14,17 @@ exports.createpost = async (req, res) => {
 }
 exports.getAllPosts = async (req, res) => {
     try {
-        const following = await User.findById(req.user.id).select('following');
-        const posts = await Post.find({}).populate('user'
-).populate('comments.commentBy','first_name last_name picture username').sort({createdAt:-1});
+        const followingtemp = await User.findById(req.user.id).select('following');
+        // console.log(followingtemp)
+        const following = followingtemp.following;
+        const promises = following.map(async(user) => {
+            return await Post.find({user:user}).populate('user','first_name last_name picture username cover').populate('comments.commentBy','first_name last_name picture username').sort({createdAt:-1}).limit(10);
+        });
+        const followingPoststemp = await Promise.all(promises);
+        const followingPosts = followingPoststemp.flat();
+        const posts = await Post.find({user:req.user.id}).sort({createdAt:-1}).populate('user','first_name last_name picture username cover').populate('comments.commentBy','first_name last_name picture username').sort({createdAt:-1}).limit(10);
+        posts.push(...[...followingPosts]);
+        posts.sort((a,b) => b.createdAt - a.createdAt);
         res.status(200).json({
             messages: "Get All Posts Successfully",
             posts
