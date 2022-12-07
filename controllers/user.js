@@ -536,7 +536,11 @@ exports.friendPageinfo= async(req,res)=>{
   try {
     const user = await User.findById(req.user.id).select('friends requests').populate("friends","first_name last_name username picture").populate("requests","first_name last_name username picture")
     const sentRequests= await User.find({requests:mongoose.Types.ObjectId(req.user.id)}).select('first_name last_name username picture')
-
+   res.status(200).json({
+    friends: user?.friends,
+    requests: user?.requests,
+    sentRequests
+   })
   } catch (error) {
     res.status(500).json({ messages: error?.messages });
   }
