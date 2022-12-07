@@ -83,7 +83,7 @@ exports.savepost = async (req, res) => {
 exports.deletepost = async (req, res) => {
     try {
         const {id} = req.params;
-        await Post.findByIdAndDelete(id);
+        await Post.findByIdAndRemove(id);
         res.status(200).json({
             messages: "Delete Post Successfully",
         })

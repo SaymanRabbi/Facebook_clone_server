@@ -12,5 +12,5 @@ router.post("/createpost", authUser,createpost);
 router.get("/posts", authUser,getAllPosts);
 router.put('/comment',authUser,comment)
 router.put('/savepost/:id',authUser,savepost)
-router.delete('/deletepost/:id',authUser,deletepost)
+router.put('/deletepost/:id',authUser,deletepost)
 module.exports = router;
