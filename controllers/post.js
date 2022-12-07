@@ -3,6 +3,7 @@ const User = require('../Models/User');
 exports.createpost = async (req, res) => {
     try {
         const post = await new Post(req.body).save();
+        await post.populate('user','first_name last_name picture username cover');
         res.status(200).json({
             messages: "Create Post Successfully",
         });
