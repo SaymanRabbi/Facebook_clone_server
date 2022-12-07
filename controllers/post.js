@@ -55,3 +55,13 @@ exports.comment = async (req, res) => {
         })
     }
 }
+exports.savepost = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const user = await User.findById(req.user.id);
+    } catch (error) {
+        return res.status(500).json({
+            messages:error.message
+        })
+    }
+}
