@@ -5,9 +5,9 @@ exports.createpost = async (req, res) => {
     try {
         const post = await new Post(req.body).save();
         await post.populate('user','first_name last_name picture username cover');
-        res.status(200).json({
-            messages: "Create Post Successfully",
-        });
+        res.json(
+            post
+        );
     } catch (error) {
         return res.status(500).json({
             messages:error.message
@@ -27,10 +27,9 @@ exports.getAllPosts = async (req, res) => {
         const posts = await Post.find({user:req.user.id}).sort({createdAt:-1}).populate('user','first_name last_name picture username cover').populate('comments.commentBy','first_name last_name picture username').sort({createdAt:-1}).limit(10);
         posts.push(...[...followingPosts]);
         posts.sort((a,b) => b.createdAt - a.createdAt);
-        res.status(200).json({
-            messages: "Get All Posts Successfully",
+        res.json(
             posts
-        });
+        );
     } catch (error) {
         return res.status(500).json({
             messages:error.message
@@ -46,10 +45,9 @@ exports.comment = async (req, res) => {
         },{
             new:true
         }).populate('comments.commentBy','first_name last_name picture username');
-        res.send({
-            messages: "Comment Successfully",
-            comment:newComment.comments
-        })
+        res.send(
+            newComment.comments
+        )
     } catch (error) {
         return res.status(500).json({
             messages:error.message
