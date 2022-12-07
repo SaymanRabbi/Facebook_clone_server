@@ -1,4 +1,5 @@
 const Post = require('../Models/Post');
+const User = require('../Models/User');
 exports.createpost = async (req, res) => {
     try {
         const post = await new Post(req.body).save();
@@ -13,8 +14,9 @@ exports.createpost = async (req, res) => {
 }
 exports.getAllPosts = async (req, res) => {
     try {
+        const following = await User.findById(req.user.id).select('following');
         const posts = await Post.find({}).populate('user'
-).sort({createdAt:-1});
+).populate('comments.commentBy','first_name last_name picture username').sort({createdAt:-1});
         res.status(200).json({
             messages: "Get All Posts Successfully",
             posts
