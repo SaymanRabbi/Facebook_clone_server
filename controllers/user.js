@@ -525,7 +525,8 @@ exports.deleteRequest= async(req,res)=>{
 exports.search= async(req,res)=>{
   try {
     const {searchTerm} = req.params
-    const result = await User.find({$text: {$search: searchTerm}})
+    const results = await User.find({$text: {$search: searchTerm}}).select('first_name last_name username picture')
+    res.status(200).json(results)
   } catch (error) {
     res.status(500).json({ messages: error?.messages });
   }
