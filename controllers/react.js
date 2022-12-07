@@ -1,4 +1,5 @@
 const React = require("../Models/React");
+const User = require("../Models/User");
 const mongoose = require("mongoose");
 exports.reactPost = async (req, res) => {
     
@@ -82,8 +83,11 @@ const reacts = [
             postRef: id,
             userRef: req?.user?.id,
         })
-        // console.log(cheack);
-        res.status(200).json({reacts,cheack:cheack,total:Reactarray.length});
+        const user =await User.findById(req?.user?.id);
+        const cheackSaved = user.savedPosts.find((post) => post.post.toString() == id);
+        res.status(200).json({reacts,cheack:cheack,total:Reactarray.length,
+            cheackSaved:cheackSaved?true:false
+            });
 } catch (error) {
     res.status(500).json({  messages:error.message});
 }

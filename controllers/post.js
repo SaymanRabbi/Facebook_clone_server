@@ -63,7 +63,7 @@ exports.savepost = async (req, res) => {
         const isSaved = user.savedPosts.find((post) => post.post.toString() == id);
         if(isSaved){
             await User.findByIdAndUpdate(req.user.id,{
-                $pull:{savedPosts:{post:id},
+                $pull:{savedPosts:{_id:isSaved._id},
             }
             })
         }
