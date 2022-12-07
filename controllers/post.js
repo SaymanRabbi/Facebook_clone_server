@@ -80,3 +80,16 @@ exports.savepost = async (req, res) => {
         })
     }
 }
+exports.deletepost = async (req, res) => {
+    try {
+        const {id} = req.params;
+        await Post.findByIdAndDelete(id);
+        res.status(200).json({
+            messages: "Delete Post Successfully",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            messages:error.message
+        })
+    }
+}
