@@ -522,3 +522,11 @@ exports.deleteRequest= async(req,res)=>{
     res.status(500).json({ messages: error?.messages });
   }
 }
+exports.search= async(req,res)=>{
+  try {
+    const {searchTerm} = req.params
+    const result = await User.find({$text: {$search: searchTerm}})
+  } catch (error) {
+    res.status(500).json({ messages: error?.messages });
+  }
+}
