@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 exports.authUser = async (req, res, next) => {
-
+//   console.log("authUser");
     try {
         const temp = req.header('Authorization');
         const token = temp ? temp.slice(7, temp?.length) : "";
@@ -18,7 +18,7 @@ exports.authUser = async (req, res, next) => {
             }
             req.user = decoded;
             next();
-         } );
+        } );
 
     } catch (error) {
         res.status(500).json({ messages: error?.messages })    

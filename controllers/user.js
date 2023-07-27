@@ -75,7 +75,7 @@ exports.register = async (req, res) => {
       { id: user._id.toString() },
       "30m"
     );
-    const url = `https://saymanbook.netlify.app/activate/${emailvarificationToken}`;
+    const url = `https://musical-piroshki-a776cb.netlify.app/activate/${emailvarificationToken}`;
     sendVerifactionEmail(user?.email, user?.first_name, url);
     const token = genaretCode({ id: user._id.toString() }, "7d");
     res.send({
@@ -162,8 +162,9 @@ exports.sendVerification = async (req, res) => {
       { id: user._id.toString() },
       "30m"
     );
-    const url = `https://saymanbook.netlify.app/activate/${emailvarificationToken}`;
+    const url = `https://musical-piroshki-a776cb.netlify.app/activate/${emailvarificationToken}`;
     sendVerifactionEmail(user?.email, user?.first_name, url);
+    // console.log(url,user?.email);
     return res.status(200).json({
       messages: "Email Verification Link has been sent to your email",
     });
