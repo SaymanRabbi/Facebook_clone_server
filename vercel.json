@@ -1,10 +1,15 @@
 {
-    "version": 2,
-    "name": "facebook-sever",
-    "builds": [
-      { "src": "script.js", "use": "@vercel/node" }
+    "version":2,
+    "builds":[
+        {
+            "src":"./server.js",
+            "use": "@vercel/node"
+        }
     ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/sever.js" }
+    "routes":[
+        {
+            "src":"/(.*)",
+            "dest":"/"
+        }
     ]
-  }
+}
